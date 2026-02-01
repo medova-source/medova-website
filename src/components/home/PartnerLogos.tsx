@@ -6,8 +6,8 @@ import massGeneralLogo from "@/assets/images.jpeg";
 const partners = [
   { name: "Med Next", logo: mayoClinicLogo },
   { name: "Med Unity", logo: clevelandClinicLogo },
-  { name: "Marriott", logo: johnsHopkinsLogo },
-  { name: "Hilton", logo: massGeneralLogo },
+  // { name: "Marriott", logo: johnsHopkinsLogo },
+  // { name: "Hilton", logo: massGeneralLogo },
 ];
 
 export function PartnerLogos() {
