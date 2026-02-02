@@ -15,10 +15,10 @@ const Index = () => {
   return (
     <Layout>
       <HeroSection />
+      <PartnerLogos />
       <AboutPreview />
       <StatsSection />
       <WhyMedova />
-      <PartnerLogos />
       <TrustSection />
       <CTASection />
     </Layout>
