@@ -85,122 +85,124 @@ export function FlipbookViewer({
           <div className="pointer-events-none absolute inset-x-8 bottom-2 h-20 " />
 
           <div
-            className="relative w-full max-w-[1100px] rounded-[36px]"
-            style={{ height: "min(680px, calc(100dvh - 120px))" }}
+            className="relative w-full max-w-[960px] rounded-[12px]"
+            style={{ height: "min(680px, calc(100dvh - 125px))" }}
           >
-            <div className="relative h-full min-h-0 overflow-hidden rounded-[28px]">
-              <ReactFlipBook
-                ref={(instance) => {
-                  bookRef.current = instance as FlipbookHandle | null;
-                }}
-                className="flipbook-shell h-full w-full"
-                style={{ width: "100%", height: "100%", overflow: "hidden" }}
-                width={700}
-                height={860}
-                size="stretch"
-                startPage={0}
-                minWidth={300}
-                maxWidth={760}
-                minHeight={420}
-                maxHeight={1000}
-                // autoFlipDelay={3000} // Flip every 3 seconds
-                // autoFlipDirection="next"
+            <div className="relative h-full min-h-0 overflow-visible rounded-[12px]">
+              <div className="relative h-full min-h-0 overflow-hidden rounded-[12px]">
+                <ReactFlipBook
+                  ref={(instance) => {
+                    bookRef.current = instance as FlipbookHandle | null;
+                  }}
+                  className="flipbook-shell h-full w-full"
+                  style={{ width: "100%", height: "100%", overflow: "hidden" }}
+                  width={610}
+                  height={860}
+                  size="stretch"
+                  startPage={0}
+                  minWidth={300}
+                  maxWidth={760}
+                  minHeight={420}
+                  maxHeight={1000}
+                  // autoFlipDelay={3000} // Flip every 3 seconds
+                  // autoFlipDirection="next"
 
-                flippingTime={850}
-                maxShadowOpacity={0.48}
-                showCover={true}
-                drawShadow={false}
-                usePortrait={true}
-                autoSize={true}
-                mobileScrollSupport={true}
-                clickEventForward={true}
-                useMouseEvents={true}
-                swipeDistance={32}
-                showPageCorners={true}
-                disableFlipByClick={false}
-                showNavigationButtons={false}
-                showPageNumbers={false}
-                enableKeyboardNav={true}
-                onPageChange={(page) => setCurrentPage(page)}
-                renderPage={(_, index) => {
-                  const page = pages[index];
+                  flippingTime={850}
+                  maxShadowOpacity={0.48}
+                  showCover={true}
+                  drawShadow={false}
+                  usePortrait={true}
+                  autoSize={true}
+                  mobileScrollSupport={true}
+                  clickEventForward={true}
+                  useMouseEvents={true}
+                  swipeDistance={32}
+                  showPageCorners={true}
+                  disableFlipByClick={false}
+                  showNavigationButtons={false}
+                  showPageNumbers={false}
+                  enableKeyboardNav={true}
+                  onPageChange={(page) => setCurrentPage(page)}
+                  renderPage={(_, index) => {
+                    const page = pages[index];
 
-                  if (!page) {
-                    return <div className="h-full w-full" />;
-                  }
-
-                  const failed = failedPages[page.page];
-
-                  return (
-                    <div className="h-full w-full">
-                      <div className="relative h-full w-full overflow-hidden rounded-[26px] bg-slate-100 shadow-[0_24px_70px_rgba(15,23,42,0.14)]">
-                        {failed ? (
-                          <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(160deg,#f8fafc,#e2e8f0)] px-8 text-center text-sm text-slate-500">
-                            This page could not be loaded. Please try a direct
-                            public image URL.
-                          </div>
-                        ) : (
-                          <>
-                            <img
-                              src={page.url}
-                              alt=""
-                              aria-hidden="true"
-                              className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-center blur-2xl scale-110 opacity-70"
-                              draggable={false}
-                            />
-                            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(248,250,252,0.55),rgba(248,250,252,0.18),rgba(248,250,252,0.55))]" />
-                            <img
-                              src={page.url}
-                              alt={page.alt}
-                              className="relative z-10 block h-full w-full select-none object-contain object-center"
-                              draggable={false}
-                              loading={page.page <= 2 ? "eager" : "lazy"}
-                              fetchPriority={page.page <= 2 ? "high" : "auto"}
-                              decoding="async"
-                              onLoad={() => markLoaded(page.page)}
-                              onError={() => markFailed(page.page)}
-                            />
-                          </>
-                        )}
-
-                        <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-[linear-gradient(270deg,rgba(15,23,42,0.12),transparent)]" />
-                      </div>
-                    </div>
-                  );
-                }}
-              >
-                {pages.map((page) => (
-                  <div
-                    key={page.page}
-                    className="h-full w-full"
-                    data-density={
-                      page.page === 1 || page.page === totalPages
-                        ? "hard"
-                        : "soft"
+                    if (!page) {
+                      return <div className="h-full w-full" />;
                     }
-                  />
-                ))}
-              </ReactFlipBook>
 
-              {isBooting ? (
-                <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/55 backdrop-blur-sm">
-                  <div className="w-full max-w-sm rounded-[28px] border border-white/80 bg-white/82 p-6 text-center shadow-[0_20px_60px_rgba(15,23,42,0.12)]">
-                    <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-primary" />
-                    <p className="mt-4 text-base font-semibold text-slate-900">
-                      Preparing your flipbook
-                    </p>
-                    <p className="mt-1 text-sm text-slate-500">
-                      Loading the first pages and paper textures.
-                    </p>
+                    const failed = failedPages[page.page];
+
+                    return (
+                      <div className="h-full w-full">
+                        <div className="relative h-full w-full overflow-hidden rounded-[12px] bg-slate-100 shadow-[0_24px_70px_rgba(15,23,42,0.14)]">
+                          {failed ? (
+                            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(160deg,#f8fafc,#e2e8f0)] px-8 text-center text-sm text-slate-500">
+                              This page could not be loaded. Please try a direct
+                              public image URL.
+                            </div>
+                          ) : (
+                            <>
+                              <img
+                                src={page.url}
+                                alt=""
+                                aria-hidden="true"
+                                className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-center blur-2xl scale-110 opacity-70"
+                                draggable={false}
+                              />
+                              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(248,250,252,0.55),rgba(248,250,252,0.18),rgba(248,250,252,0.55))]" />
+                              <img
+                                src={page.url}
+                                alt={page.alt}
+                                className="relative z-10 block h-full w-full select-none object-contain object-center"
+                                draggable={false}
+                                loading={page.page <= 2 ? "eager" : "lazy"}
+                                fetchPriority={page.page <= 2 ? "high" : "auto"}
+                                decoding="async"
+                                onLoad={() => markLoaded(page.page)}
+                                onError={() => markFailed(page.page)}
+                              />
+                            </>
+                          )}
+
+                          <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-[linear-gradient(270deg,rgba(15,23,42,0.12),transparent)]" />
+                        </div>
+                      </div>
+                    );
+                  }}
+                >
+                  {pages.map((page) => (
+                    <div
+                      key={page.page}
+                      className="h-full w-full"
+                      data-density={
+                        page.page === 1 || page.page === totalPages
+                          ? "hard"
+                          : "soft"
+                      }
+                    />
+                  ))}
+                </ReactFlipBook>
+
+                {isBooting ? (
+                  <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/55 backdrop-blur-sm">
+                    <div className="w-full max-w-sm rounded-[12px] border border-white/80 bg-white/82 p-6 text-center shadow-[0_20px_60px_rgba(15,23,42,0.12)]">
+                      <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-primary" />
+                      <p className="mt-4 text-base font-semibold text-slate-900">
+                        Preparing your flipbook
+                      </p>
+                      <p className="mt-1 text-sm text-slate-500">
+                        Loading the first pages and paper textures.
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ) : null}
+                ) : null}
+              </div>
 
               <button
                 type="button"
                 onClick={handlePrev}
                 disabled={!canGoPrev}
-                className="absolute bottom-4 left-4 z-20 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/80 bg-white/90 text-slate-800 shadow-[0_16px_40px_rgba(15,23,42,0.16)] backdrop-blur-md transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40 sm:bottom-6 sm:left-6 sm:h-14 sm:w-14"
+                className="absolute bottom-1 left-4 z-[9999] inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/80 bg-white/90 text-slate-800 shadow-[0_16px_40px_rgba(15,23,42,0.16)] backdrop-blur-md transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40 sm:bottom-4 sm:left-[-60px] sm:h-14 sm:w-14"
                 aria-label="Previous page"
               >
                 <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -210,7 +212,7 @@ export function FlipbookViewer({
                 type="button"
                 onClick={handleNext}
                 disabled={!canGoNext}
-                className="absolute bottom-4 right-4 z-20 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/80 bg-white/90 text-slate-800 shadow-[0_16px_40px_rgba(15,23,42,0.16)] backdrop-blur-md transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14"
+                className="absolute bottom-1 right-4 z-[9999] inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/80 bg-white/90 text-slate-800 shadow-[0_16px_40px_rgba(15,23,42,0.16)] backdrop-blur-md transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40 sm:bottom-4 sm:right-[-60px] sm:h-14 sm:w-14"
                 aria-label="Next page"
               >
                 <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
