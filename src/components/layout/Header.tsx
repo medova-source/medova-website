@@ -17,7 +17,7 @@ const productCategories = [
   { name: "Pharmaceuticals", href: "/products/pharmaceuticals" },
   { name: "Vitamins and Supplements", href: "/products/vitamins" },
   { name: "Alder Healthcare Software Solutions", href: "/products/software" },
-  { name: "Category 5", href: "/products/category-5" },
+  // { name: "Category 5", href: "/products/category-5" },
 ];
 
 export function Header() {
@@ -35,8 +35,8 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex lg:items-center lg:gap-8">
-            {navigation.map((item) =>
-              item.isDropdown ? (
+            {navigation.map((item: any) =>
+              item?.isDropdown ? (
                 <div key={item.name} className="relative group">
                   <button
                     className={`flex items-center gap-1 text-sm font-medium transition-colors duration-200 ${location.pathname.startsWith("/products") ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`}
@@ -104,8 +104,8 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-border/50 animate-fade-in">
             <div className="flex flex-col gap-4">
-              {navigation.map((item) =>
-                item.isDropdown ? (
+              {navigation.map((item: any) =>
+                item?.isDropdown ? (
                   <div key={item.name} className="flex flex-col gap-2">
                     <div
                       className={`text-base font-medium py-2 ${location.pathname.startsWith("/products") ? "text-primary" : "text-foreground"}`}
