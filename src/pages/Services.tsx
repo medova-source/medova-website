@@ -156,7 +156,7 @@ const Services = () => {
           <img
             src={servicesbg}
             alt="Background"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover opacity-30"
           />
           {/* Dark overlay to ensure your primary-foreground text remains readable */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/80 to-primary/75" />
@@ -191,9 +191,8 @@ const Services = () => {
             {services.map((service, index) => (
               <div
                 key={service.title}
-                className={`grid lg:grid-cols-2 gap-12 items-center ${
-                  index % 2 === 1 ? "lg:flex-row-reverse" : ""
-                }`}
+                className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? "lg:flex-row-reverse" : ""
+                  }`}
               >
                 <div className={index % 2 === 1 ? "lg:order-2" : ""}>
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-6">

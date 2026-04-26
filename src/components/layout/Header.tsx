@@ -17,7 +17,7 @@ const productCategories = [
   { name: "Pharmaceuticals", href: "/products/pharmaceuticals" },
   { name: "Vitamins and Supplements", href: "/products/vitamins" },
   { name: "Healthcare Software Solutions", href: "/products/software" },
-  // { name: "Category 5", href: "/products/category-5" },
+  { name: "Rapid Diagnostic Tests", href: "/products/rapid-diagnostic-tests" },
 ];
 
 export function Header() {
