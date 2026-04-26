@@ -7,10 +7,15 @@ import {
   Sparkles,
 } from "lucide-react";
 import { ReactFlipBook } from "@vuvandinh203/react-flipbook";
+import flipPageSound from "@/assets/book_page.mp3";
 import { cn } from "@/lib/utils";
 import type { FlipbookPage } from "./catalogPages";
 
 interface FlipbookHandle {
+  pageFlip?: () => {
+    flipNext: (corner?: "top" | "bottom") => void;
+    flipPrev: (corner?: "top" | "bottom") => void;
+  } | undefined;
   flipNext: () => void;
   flipPrev: () => void;
 }
@@ -29,15 +34,62 @@ export function FlipbookViewer({
   className,
 }: FlipbookViewerProps) {
   const bookRef = useRef<FlipbookHandle | null>(null);
+  const flipSoundRef = useRef<HTMLAudioElement | null>(null);
+  const previousPageRef = useRef(0);
+  const suppressNextSoundRef = useRef(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [loadedPages, setLoadedPages] = useState<Record<number, true>>({});
   const [failedPages, setFailedPages] = useState<Record<number, true>>({});
 
   useEffect(() => {
+    const audio = new Audio(flipPageSound);
+    audio.preload = "auto";
+    audio.volume = 1;
+    flipSoundRef.current = audio;
+
+    return () => {
+      if (flipSoundRef.current) {
+        flipSoundRef.current.pause();
+        flipSoundRef.current = null;
+      }
+    };
+  }, [pages]);
+
+  useEffect(() => {
+    suppressNextSoundRef.current = true;
+    previousPageRef.current = 0;
     setCurrentPage(0);
     setLoadedPages({});
     setFailedPages({});
   }, [pages]);
+
+  useEffect(() => {
+    if (suppressNextSoundRef.current) {
+      suppressNextSoundRef.current = false;
+      return;
+    }
+
+    if (currentPage === previousPageRef.current) {
+      return;
+    }
+
+    previousPageRef.current = currentPage;
+    const audio = flipSoundRef.current;
+    if (!audio) return;
+
+    try {
+      audio.currentTime = 0;
+      const playback = audio.play();
+
+      if (playback && typeof playback.catch === "function") {
+        playback.catch(() => {
+          // Ignore autoplay restrictions or interruption errors.
+        });
+      }
+    } catch {
+      // Ignore playback failures so the flipbook still works normally.
+    }
+  }, [currentPage]);
 
   const totalPages = pages.length;
   const activePage = totalPages ? Math.min(currentPage + 1, totalPages) : 0;
@@ -61,10 +113,20 @@ export function FlipbookViewer({
   };
 
   const handlePrev = () => {
+    const pageFlip = bookRef.current?.pageFlip?.();
+    if (pageFlip) {
+      pageFlip.flipPrev("bottom");
+      return;
+    }
     bookRef.current?.flipPrev();
   };
 
   const handleNext = () => {
+    const pageFlip = bookRef.current?.pageFlip?.();
+    if (pageFlip) {
+      pageFlip.flipNext("bottom");
+      return;
+    }
     bookRef.current?.flipNext();
   };
 
