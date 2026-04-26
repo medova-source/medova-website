@@ -16,7 +16,7 @@ const productCategories = [
   { name: "Medical Consumables and Disposables", href: "/products/medical" },
   { name: "Pharmaceuticals", href: "/products/pharmaceuticals" },
   { name: "Vitamins and Supplements", href: "/products/vitamins" },
-  { name: "Alder Healthcare Software Solutions", href: "/products/software" },
+  { name: "Healthcare Software Solutions", href: "/products/software" },
   // { name: "Category 5", href: "/products/category-5" },
 ];
 
@@ -68,8 +68,8 @@ export function Header() {
                   key={item.name}
                   to={item.href}
                   className={`text-sm font-medium transition-colors duration-200 ${location.pathname === item.href
-                      ? "text-primary"
-                      : "text-muted-foreground hover:text-foreground"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
                     }`}
                 >
                   {item.name}
@@ -118,8 +118,8 @@ export function Header() {
                           to={category.href}
                           onClick={() => setMobileMenuOpen(false)}
                           className={`text-sm font-medium py-1 transition-colors ${location.pathname === category.href
-                              ? "text-primary"
-                              : "text-muted-foreground hover:text-foreground"
+                            ? "text-primary"
+                            : "text-muted-foreground hover:text-foreground"
                             }`}
                         >
                           {category.name}
@@ -133,8 +133,8 @@ export function Header() {
                     to={item.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`text-base font-medium py-2 transition-colors ${location.pathname === item.href
-                        ? "text-primary"
-                        : "text-muted-foreground hover:text-foreground"
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground"
                       }`}
                   >
                     {item.name}
