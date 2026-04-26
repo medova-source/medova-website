@@ -11,6 +11,16 @@ import flipPageSound from "@/assets/book_page.mp3";
 import { cn } from "@/lib/utils";
 import type { FlipbookPage } from "./catalogPages";
 
+interface PageFlipLike {
+  on: (eventName: string, callback: (event: { data?: unknown }) => void) => void;
+  off: (eventName: string) => void;
+}
+
+interface FlipStateEvent {
+  data?: unknown;
+  object?: PageFlipLike;
+}
+
 interface FlipbookHandle {
   pageFlip?: () => {
     flipNext: (corner?: "top" | "bottom") => void;
@@ -35,8 +45,8 @@ export function FlipbookViewer({
 }: FlipbookViewerProps) {
   const bookRef = useRef<FlipbookHandle | null>(null);
   const flipSoundRef = useRef<HTMLAudioElement | null>(null);
-  const previousPageRef = useRef(0);
-  const suppressNextSoundRef = useRef(false);
+  const pageFlipStateRef = useRef<PageFlipLike | null>(null);
+  const lastSoundAtRef = useRef(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [loadedPages, setLoadedPages] = useState<Record<number, true>>({});
   const [failedPages, setFailedPages] = useState<Record<number, true>>({});
@@ -48,48 +58,21 @@ export function FlipbookViewer({
     flipSoundRef.current = audio;
 
     return () => {
+      pageFlipStateRef.current?.off("changeState");
+      pageFlipStateRef.current = null;
+
       if (flipSoundRef.current) {
         flipSoundRef.current.pause();
         flipSoundRef.current = null;
       }
     };
-  }, [pages]);
+  }, []);
 
   useEffect(() => {
-    suppressNextSoundRef.current = true;
-    previousPageRef.current = 0;
     setCurrentPage(0);
     setLoadedPages({});
     setFailedPages({});
   }, [pages]);
-
-  useEffect(() => {
-    if (suppressNextSoundRef.current) {
-      suppressNextSoundRef.current = false;
-      return;
-    }
-
-    if (currentPage === previousPageRef.current) {
-      return;
-    }
-
-    previousPageRef.current = currentPage;
-    const audio = flipSoundRef.current;
-    if (!audio) return;
-
-    try {
-      audio.currentTime = 0;
-      const playback = audio.play();
-
-      if (playback && typeof playback.catch === "function") {
-        playback.catch(() => {
-          // Ignore autoplay restrictions or interruption errors.
-        });
-      }
-    } catch {
-      // Ignore playback failures so the flipbook still works normally.
-    }
-  }, [currentPage]);
 
   const totalPages = pages.length;
   const activePage = totalPages ? Math.min(currentPage + 1, totalPages) : 0;
@@ -110,6 +93,48 @@ export function FlipbookViewer({
     setFailedPages((current) =>
       current[pageNumber] ? current : { ...current, [pageNumber]: true },
     );
+  };
+
+  const playFlipSound = () => {
+    const now = Date.now();
+
+    if (now - lastSoundAtRef.current < 120) {
+      return;
+    }
+
+    lastSoundAtRef.current = now;
+
+    const audio = flipSoundRef.current;
+    if (!audio) return;
+
+    try {
+      audio.currentTime = 0;
+      const playback = audio.play();
+
+      if (playback && typeof playback.catch === "function") {
+        playback.catch(() => {
+          // Ignore autoplay restrictions or interruption errors.
+        });
+      }
+    } catch {
+      // Ignore playback failures so the flipbook still works normally.
+    }
+  };
+
+  const handleInit = (event: FlipStateEvent) => {
+    const pageFlip = event.object;
+    if (!pageFlip || pageFlipStateRef.current === pageFlip) {
+      return;
+    }
+
+    pageFlipStateRef.current?.off("changeState");
+    pageFlipStateRef.current = pageFlip;
+
+    pageFlip.on("changeState", (flipEvent) => {
+      if (flipEvent.data === "flipping" || flipEvent.data === "user_fold") {
+        playFlipSound();
+      }
+    });
   };
 
   const handlePrev = () => {
@@ -184,6 +209,7 @@ export function FlipbookViewer({
                   showNavigationButtons={false}
                   showPageNumbers={false}
                   enableKeyboardNav={true}
+                  onInit={handleInit}
                   onPageChange={(page) => setCurrentPage(page)}
                   renderPage={(_, index) => {
                     const page = pages[index];
