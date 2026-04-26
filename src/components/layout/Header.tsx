@@ -8,7 +8,7 @@ const navigation = [
   { name: "Home", href: "/" },
   { name: "About Us", href: "/about" },
   { name: "Our Services", href: "/services" },
-  // { name: "Products", href: "#", isDropdown: true },
+  { name: "Products", href: "#", isDropdown: true },
   { name: "Contact Us", href: "/contact" },
 ];
 
@@ -67,11 +67,10 @@ export function Header() {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`text-sm font-medium transition-colors duration-200 ${
-                    location.pathname === item.href
+                  className={`text-sm font-medium transition-colors duration-200 ${location.pathname === item.href
                       ? "text-primary"
                       : "text-muted-foreground hover:text-foreground"
-                  }`}
+                    }`}
                 >
                   {item.name}
                 </Link>
@@ -118,11 +117,10 @@ export function Header() {
                           key={category.name}
                           to={category.href}
                           onClick={() => setMobileMenuOpen(false)}
-                          className={`text-sm font-medium py-1 transition-colors ${
-                            location.pathname === category.href
+                          className={`text-sm font-medium py-1 transition-colors ${location.pathname === category.href
                               ? "text-primary"
                               : "text-muted-foreground hover:text-foreground"
-                          }`}
+                            }`}
                         >
                           {category.name}
                         </Link>
@@ -134,11 +132,10 @@ export function Header() {
                     key={item.name}
                     to={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`text-base font-medium py-2 transition-colors ${
-                      location.pathname === item.href
+                    className={`text-base font-medium py-2 transition-colors ${location.pathname === item.href
                         ? "text-primary"
                         : "text-muted-foreground hover:text-foreground"
-                    }`}
+                      }`}
                   >
                     {item.name}
                   </Link>
